@@ -30,22 +30,26 @@ A modern, responsive web application for tracking and analyzing your expenses. B
 ### Installation
 
 1. Clone the repository
+
 ```bash
 git clone <repository-url>
 cd gastos-tracker
 ```
 
 2. Install dependencies
+
 ```bash
 npm install
 ```
 
 3. Create environment variables
+
 ```bash
 cp .env.example .env.local
 ```
 
 4. Start the development server
+
 ```bash
 npm run dev
 ```
@@ -80,41 +84,53 @@ gastos-tracker/
 ## Available Scripts
 
 ### Development
+
 ```bash
 npm run dev
 ```
+
 Runs the development server with hot-reload.
 
 ### Build
+
 ```bash
 npm run build
 ```
+
 Creates an optimized production build.
 
 ### Production
+
 ```bash
 npm start
 ```
+
 Runs the production server.
 
 ### Linting
+
 ```bash
 npm run lint
 ```
+
 Runs ESLint to check code quality.
 
 ## Key Components
 
 ### Summary Cards
+
 Display key financial metrics at a glance, such as total expenses, average spending, and budget status.
 
 ### Transaction List
+
 Shows recent transactions with details including date, amount, category, and description.
 
 ### Category Chart
+
 Pie or donut chart visualization showing expense breakdown by category.
 
 ### Trend Chart
+
 Line chart displaying expense trends over time.
 
 ## Contributing

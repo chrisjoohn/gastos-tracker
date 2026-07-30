@@ -1,9 +1,9 @@
-import { Plus } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { SummaryCards } from "@/components/summary-cards"
-import { CategoryChart } from "@/components/category-chart"
-import { TrendChart } from "@/components/trend-chart"
-import { RecentTransactions } from "@/components/recent-transactions"
+import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { SummaryCards } from "@/components/summary-cards";
+import { CategoryChart } from "@/components/category-chart";
+import { TrendChart } from "@/components/trend-chart";
+import { RecentTransactions } from "@/components/recent-transactions";
 
 export default function Page() {
   return (
@@ -35,5 +35,5 @@ export default function Page() {
         </div>
       </div>
     </main>
-  )
+  );
 }

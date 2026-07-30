@@ -1,20 +1,20 @@
-import { Wallet, TrendingUp, Receipt } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
+import { Wallet, TrendingUp, Receipt } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   categories,
   formatCurrency,
   topCategory,
   totalSpent,
   transactionCount,
-} from "@/lib/finance-data"
-import type { LucideIcon } from "lucide-react"
+} from "@/lib/finance-data";
+import type { LucideIcon } from "lucide-react";
 
 type SummaryCardProps = {
-  label: string
-  value: string
-  hint: string
-  icon: LucideIcon
-}
+  label: string;
+  value: string;
+  hint: string;
+  icon: LucideIcon;
+};
 
 function SummaryCard({ label, value, hint, icon: Icon }: SummaryCardProps) {
   return (
@@ -32,14 +32,17 @@ function SummaryCard({ label, value, hint, icon: Icon }: SummaryCardProps) {
         </span>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 export function SummaryCards() {
-  const top = categories[topCategory.category]
+  const top = categories[topCategory.category];
 
   return (
-    <section aria-label="Monthly summary" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <section
+      aria-label="Monthly summary"
+      className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+    >
       <SummaryCard
         label="Total Spent This Month"
         value={formatCurrency(totalSpent)}
@@ -59,5 +62,5 @@ export function SummaryCards() {
         icon={Receipt}
       />
     </section>
-  )
+  );
 }

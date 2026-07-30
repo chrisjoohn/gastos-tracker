@@ -1,37 +1,41 @@
-"use client"
+"use client";
 
-import { Pie, PieChart, Cell, Label } from "recharts"
+import { Pie, PieChart, Cell, Label } from "recharts";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
-} from "@/components/ui/chart"
-import { categories, formatCurrency, spendingByCategory } from "@/lib/finance-data"
+} from "@/components/ui/chart";
+import {
+  categories,
+  formatCurrency,
+  spendingByCategory,
+} from "@/lib/finance-data";
 
 const chartData = spendingByCategory.map((item) => ({
   key: item.category,
   label: categories[item.category].label,
   amount: item.amount,
   fill: categories[item.category].color,
-}))
+}));
 
 const chartConfig = spendingByCategory.reduce((config, item) => {
   config[item.category] = {
     label: categories[item.category].label,
     color: categories[item.category].color,
-  }
-  return config
-}, {} as ChartConfig)
+  };
+  return config;
+}, {} as ChartConfig);
 
-const total = spendingByCategory.reduce((sum, c) => sum + c.amount, 0)
+const total = spendingByCategory.reduce((sum, c) => sum + c.amount, 0);
 
 export function CategoryChart() {
   return (
@@ -54,7 +58,8 @@ export function CategoryChart() {
                     hideLabel
                     formatter={(value, name) => [
                       `${formatCurrency(Number(value))}  `,
-                      categories[name as keyof typeof categories]?.label ?? name,
+                      categories[name as keyof typeof categories]?.label ??
+                        name,
                     ]}
                   />
                 }
@@ -96,7 +101,7 @@ export function CategoryChart() {
                             Total
                           </tspan>
                         </text>
-                      )
+                      );
                     }
                   }}
                 />
@@ -124,5 +129,5 @@ export function CategoryChart() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

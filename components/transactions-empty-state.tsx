@@ -1,6 +1,6 @@
-import { Plus, ReceiptText } from "lucide-react"
+import { Plus, ReceiptText } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 
 export function TransactionsEmptyState({ onAdd }: { onAdd: () => void }) {
   return (
@@ -24,5 +24,5 @@ export function TransactionsEmptyState({ onAdd }: { onAdd: () => void }) {
         Add Transaction
       </Button>
     </div>
-  )
+  );
 }

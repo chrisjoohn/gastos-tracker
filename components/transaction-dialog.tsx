@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 
 import {
   Dialog,
@@ -9,30 +9,30 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import {
   categories,
   categoryOptions,
   type CategoryKey,
   type Transaction,
-} from "@/lib/finance-data"
+} from "@/lib/finance-data";
 
 export type TransactionDraft = {
-  amount: string
-  category: CategoryKey
-  date: string
-  note: string
-}
+  amount: string;
+  category: CategoryKey;
+  date: string;
+  note: string;
+};
 
 function toDraft(tx: Transaction | null): TransactionDraft {
   if (!tx) {
@@ -41,14 +41,14 @@ function toDraft(tx: Transaction | null): TransactionDraft {
       category: "food",
       date: new Date().toISOString().slice(0, 10),
       note: "",
-    }
+    };
   }
   return {
     amount: String(tx.amount),
     category: tx.category,
     date: tx.date,
     note: tx.description,
-  }
+  };
 }
 
 export function TransactionDialog({
@@ -57,31 +57,31 @@ export function TransactionDialog({
   transaction,
   onSave,
 }: {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   /** null = adding a new transaction, otherwise editing */
-  transaction: Transaction | null
-  onSave: (draft: TransactionDraft, id: string | null) => void
+  transaction: Transaction | null;
+  onSave: (draft: TransactionDraft, id: string | null) => void;
 }) {
   const [draft, setDraft] = React.useState<TransactionDraft>(() =>
     toDraft(transaction),
-  )
+  );
 
   // Re-seed the form whenever the dialog opens for a different transaction.
   React.useEffect(() => {
-    if (open) setDraft(toDraft(transaction))
-  }, [open, transaction])
+    if (open) setDraft(toDraft(transaction));
+  }, [open, transaction]);
 
-  const isEditing = transaction !== null
-  const amountNum = Number.parseFloat(draft.amount)
+  const isEditing = transaction !== null;
+  const amountNum = Number.parseFloat(draft.amount);
   const isValid =
-    Number.isFinite(amountNum) && amountNum > 0 && draft.note.trim().length > 0
+    Number.isFinite(amountNum) && amountNum > 0 && draft.note.trim().length > 0;
 
   function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!isValid) return
-    onSave(draft, transaction?.id ?? null)
-    onOpenChange(false)
+    e.preventDefault();
+    if (!isValid) return;
+    onSave(draft, transaction?.id ?? null);
+    onOpenChange(false);
   }
 
   return (
@@ -139,14 +139,14 @@ export function TransactionDialog({
                 </SelectTrigger>
                 <SelectContent>
                   {categoryOptions.map((key) => {
-                    const cat = categories[key]
-                    const Icon = cat.icon
+                    const cat = categories[key];
+                    const Icon = cat.icon;
                     return (
                       <SelectItem key={key} value={key}>
                         <Icon className="size-4 text-muted-foreground" />
                         {cat.label}
                       </SelectItem>
-                    )
+                    );
                   })}
                 </SelectContent>
               </Select>
@@ -192,5 +192,5 @@ export function TransactionDialog({
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

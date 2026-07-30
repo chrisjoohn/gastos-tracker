@@ -1,15 +1,15 @@
-import { categories, type CategoryKey } from "@/lib/finance-data"
-import { cn } from "@/lib/utils"
+import { categories, type CategoryKey } from "@/lib/finance-data";
+import { cn } from "@/lib/utils";
 
 export function CategoryBadge({
   category,
   className,
 }: {
-  category: CategoryKey
-  className?: string
+  category: CategoryKey;
+  className?: string;
 }) {
-  const cat = categories[category]
-  const Icon = cat.icon
+  const cat = categories[category];
+  const Icon = cat.icon;
   return (
     <span
       className={cn(
@@ -24,5 +24,5 @@ export function CategoryBadge({
       <Icon className="size-3.5" aria-hidden="true" />
       {cat.label}
     </span>
-  )
+  );
 }

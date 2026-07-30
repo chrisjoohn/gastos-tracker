@@ -1,9 +1,9 @@
-import { Sparkles } from "lucide-react"
-import type { ChatMessage as ChatMessageType } from "@/lib/chat-data"
-import { cn } from "@/lib/utils"
+import { Sparkles } from "lucide-react";
+import type { ChatMessage as ChatMessageType } from "@/lib/chat-data";
+import { cn } from "@/lib/utils";
 
 export function ChatMessage({ message }: { message: ChatMessageType }) {
-  const isUser = message.role === "user"
+  const isUser = message.role === "user";
 
   return (
     <div
@@ -34,5 +34,5 @@ export function ChatMessage({ message }: { message: ChatMessageType }) {
         {message.content}
       </div>
     </div>
-  )
+  );
 }
