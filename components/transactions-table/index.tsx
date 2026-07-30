@@ -14,8 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formatCurrency, type Transaction } from "@/lib/finance-data";
-
-const DEFAULT_PAGE_SIZE = 8;
+import { useTransactionsTable } from "./useTransactionsTable";
 
 export type TransactionsTableProps = {
   transactions: Transaction[];
@@ -33,21 +32,17 @@ function formatDate(iso: string) {
 
 export default function TransactionsTable({
   transactions,
-  pageSize = DEFAULT_PAGE_SIZE,
+  pageSize,
   onEdit,
 }: TransactionsTableProps) {
-  const [page, setPage] = React.useState(1);
 
-  const totalPages = Math.max(1, Math.ceil(transactions.length / pageSize));
-  const currentPage = Math.min(page, totalPages);
-  const pageItems = transactions.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize,
-  );
-
-  React.useEffect(() => {
-    setPage(1);
-  }, [transactions, pageSize]);
+  const {
+    currentPage,
+    totalPages,
+    pageItems,
+    setPage,
+    pageSize: resolvedPageSize,
+  } = useTransactionsTable(transactions, { pageSize });
 
   if (transactions.length === 0) {
     return (
@@ -111,8 +106,8 @@ export default function TransactionsTable({
         <p className="text-sm text-muted-foreground">
           Showing{" "}
           <span className="font-medium text-foreground">
-            {(currentPage - 1) * pageSize + 1}–
-            {Math.min(currentPage * pageSize, transactions.length)}
+            {(currentPage - 1) * resolvedPageSize + 1}–
+            {Math.min(currentPage * resolvedPageSize, transactions.length)}
           </span>{" "}
           of{" "}
           <span className="font-medium text-foreground">
