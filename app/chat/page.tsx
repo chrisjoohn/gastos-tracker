@@ -1,75 +1,77 @@
-"use client"
+"use client";
 
-import { useEffect, useRef, useState } from "react"
-import { Send } from "lucide-react"
+import { useEffect, useRef, useState } from "react";
+import { Send } from "lucide-react";
 import {
   assistantGreeting,
   getMockReply,
   suggestedPrompts,
   type ChatMessage as ChatMessageType,
-} from "@/lib/chat-data"
-import { ChatMessage } from "@/components/chat-message"
-import { ChatTypingIndicator } from "@/components/chat-typing-indicator"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+} from "@/lib/chat-data";
+import { ChatMessage } from "@/components/chat-message";
+import { ChatTypingIndicator } from "@/components/chat-typing-indicator";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function ChatPage() {
-  const [messages, setMessages] = useState<ChatMessageType[]>([assistantGreeting])
-  const [input, setInput] = useState("")
-  const [isTyping, setIsTyping] = useState(false)
+  const [messages, setMessages] = useState<ChatMessageType[]>([
+    assistantGreeting,
+  ]);
+  const [input, setInput] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
 
-  const scrollRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
-  const replyTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const replyTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Only the opening greeting means we're still in the empty state.
-  const isEmptyState = messages.length === 1
+  const isEmptyState = messages.length === 1;
 
   useEffect(() => {
     scrollRef.current?.scrollTo({
       top: scrollRef.current.scrollHeight,
       behavior: "smooth",
-    })
-  }, [messages, isTyping])
+    });
+  }, [messages, isTyping]);
 
   useEffect(() => {
     return () => {
-      if (replyTimeout.current) clearTimeout(replyTimeout.current)
-    }
-  }, [])
+      if (replyTimeout.current) clearTimeout(replyTimeout.current);
+    };
+  }, []);
 
   function sendMessage(text: string) {
-    const trimmed = text.trim()
-    if (!trimmed || isTyping) return
+    const trimmed = text.trim();
+    if (!trimmed || isTyping) return;
 
     const userMessage: ChatMessageType = {
       id: `u-${Date.now()}`,
       role: "user",
       content: trimmed,
-    }
-    setMessages((prev) => [...prev, userMessage])
-    setInput("")
-    setIsTyping(true)
+    };
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    setIsTyping(true);
 
     replyTimeout.current = setTimeout(() => {
       const assistantMessage: ChatMessageType = {
         id: `a-${Date.now()}`,
         role: "assistant",
         content: getMockReply(trimmed),
-      }
-      setMessages((prev) => [...prev, assistantMessage])
-      setIsTyping(false)
-    }, 1200)
+      };
+      setMessages((prev) => [...prev, assistantMessage]);
+      setIsTyping(false);
+    }, 1200);
   }
 
   function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    sendMessage(input)
+    e.preventDefault();
+    sendMessage(input);
   }
 
   function handleChipClick(prompt: string) {
-    setInput(prompt)
-    inputRef.current?.focus()
+    setInput(prompt);
+    inputRef.current?.focus();
   }
 
   return (
@@ -137,5 +139,5 @@ export default function ChatPage() {
         </form>
       </div>
     </main>
-  )
+  );
 }

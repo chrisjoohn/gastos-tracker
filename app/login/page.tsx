@@ -1,41 +1,41 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import type { FormEvent } from "react"
-import { Wallet, Loader2 } from "lucide-react"
+import { useState } from "react";
+import type { FormEvent } from "react";
+import { Wallet, Loader2 } from "lucide-react";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 
-type Mode = "login" | "signup"
+type Mode = "login" | "signup";
 
 export default function LoginPage() {
-  const [mode, setMode] = useState<Mode>("login")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [submitting, setSubmitting] = useState(false)
+  const [mode, setMode] = useState<Mode>("login");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  const isLogin = mode === "login"
+  const isLogin = mode === "login";
 
   function switchMode(next: Mode) {
-    setMode(next)
-    setPassword("")
+    setMode(next);
+    setPassword("");
   }
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault()
+    e.preventDefault();
     // Mock submit — no real auth yet.
-    setSubmitting(true)
-    setTimeout(() => setSubmitting(false), 1200)
+    setSubmitting(true);
+    setTimeout(() => setSubmitting(false), 1200);
   }
 
   return (
@@ -172,5 +172,5 @@ export default function LoginPage() {
         </p>
       </div>
     </main>
-  )
+  );
 }

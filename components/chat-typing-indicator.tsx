@@ -1,4 +1,4 @@
-import { Sparkles } from "lucide-react"
+import { Sparkles } from "lucide-react";
 
 export function ChatTypingIndicator() {
   return (
@@ -17,7 +17,7 @@ export function ChatTypingIndicator() {
         <Dot />
       </div>
     </div>
-  )
+  );
 }
 
 function Dot({ className }: { className?: string }) {
@@ -26,5 +26,5 @@ function Dot({ className }: { className?: string }) {
       className={`size-1.5 animate-bounce rounded-full bg-muted-foreground/60 ${className ?? ""}`}
       aria-hidden="true"
     />
-  )
+  );
 }

@@ -1,10 +1,10 @@
-export type ChatRole = "user" | "assistant"
+export type ChatRole = "user" | "assistant";
 
 export type ChatMessage = {
-  id: string
-  role: ChatRole
-  content: string
-}
+  id: string;
+  role: ChatRole;
+  content: string;
+};
 
 // Suggested prompt chips shown in the empty state.
 export const suggestedPrompts: string[] = [
@@ -12,7 +12,7 @@ export const suggestedPrompts: string[] = [
   "How much did I spend on food?",
   "Give me a savings tip",
   "Am I on track with my budget?",
-]
+];
 
 // A short canned greeting the assistant opens with.
 export const assistantGreeting: ChatMessage = {
@@ -20,7 +20,7 @@ export const assistantGreeting: ChatMessage = {
   role: "assistant",
   content:
     "Hi, I'm your budgeting assistant. Ask me anything about your spending, categories, or savings goals this month.",
-}
+};
 
 // Canned responses keyed loosely to the suggested prompts. Falls back to a
 // generic reply for anything else. Mock data only for now.
@@ -45,10 +45,10 @@ const cannedResponses: { match: RegExp; reply: string }[] = [
     reply:
       "You're at 68% of your total monthly budget with 6 days left. At your current pace you'll finish around $180 under budget — nicely on track.",
   },
-]
+];
 
 export function getMockReply(userText: string): string {
-  const hit = cannedResponses.find((r) => r.match.test(userText))
-  if (hit) return hit.reply
-  return "I can help with that. Based on your recent activity, your spending looks steady this month. Try asking about a specific category like Food or Transport for a detailed breakdown."
+  const hit = cannedResponses.find((r) => r.match.test(userText));
+  if (hit) return hit.reply;
+  return "I can help with that. Based on your recent activity, your spending looks steady this month. Try asking about a specific category like Food or Transport for a detailed breakdown.";
 }
