@@ -23,12 +23,21 @@ export default defineConfig({
         ],
         test: {
           name: 'storybook',
+          include: ['stories/**/*.stories.@(js|jsx|mjs|ts|tsx)', 'stories/**/*.mdx'],
           browser: {
             enabled: true,
             headless: true,
             provider: playwright({}),
             instances: [{ browser: 'chromium' }],
           },
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: 'unit',
+          environment: 'node',
+          include: ['**/*.{test,spec}.?(c|m)[jt]s?(x)'],
         },
       },
     ],
