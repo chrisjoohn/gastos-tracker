@@ -1,5 +1,5 @@
 import * as React from "react";
-import { type Transaction } from "@/lib/finance-data";
+import { allTransactions } from "@/lib/finance-data";
 
 const DEFAULT_PAGE_SIZE = 8;
 
@@ -9,7 +9,6 @@ export type UseTransactionsTableOptions = {
 };
 
 export function useTransactionsTable(
-  transactions: Transaction[],
   options: UseTransactionsTableOptions = {},
 ) {
   const { pageSize = DEFAULT_PAGE_SIZE, initialPage = 1 } = options;
@@ -17,14 +16,18 @@ export function useTransactionsTable(
 
   React.useEffect(() => {
     setPage(1);
-  }, [transactions, pageSize]);
+  }, [pageSize]);
 
-  const totalPages = Math.max(1, Math.ceil(transactions.length / pageSize));
+  const totalPages = Math.max(1, Math.ceil(allTransactions.length / pageSize));
   const currentPage = Math.min(page, totalPages);
 
   const pageItems = React.useMemo(
-    () => transactions.slice((currentPage - 1) * pageSize, currentPage * pageSize),
-    [transactions, currentPage, pageSize],
+    () =>
+      allTransactions.slice(
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize,
+      ),
+    [currentPage, pageSize],
   );
 
   const reset = React.useCallback(() => setPage(1), []);
@@ -37,5 +40,6 @@ export function useTransactionsTable(
     pageItems,
     pageSize,
     reset,
+    transactions: allTransactions,
   } as const;
 }

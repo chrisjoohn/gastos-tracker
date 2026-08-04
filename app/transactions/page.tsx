@@ -212,11 +212,7 @@ export default function TransactionsPage() {
         {filtered.length === 0 ? (
           <TransactionsEmptyState onAdd={openAdd} />
         ) : (
-          <TransactionsTable
-            transactions={filtered}
-            pageSize={8}
-            onEdit={openEdit}
-          />
+          <TransactionsTable pageSize={8} onEdit={openEdit} />
         )}
       </div>
 

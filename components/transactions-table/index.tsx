@@ -17,9 +17,11 @@ import { formatCurrency, type Transaction } from "@/lib/finance-data";
 import { useTransactionsTable } from "./useTransactionsTable";
 
 export type TransactionsTableProps = {
-  transactions: Transaction[];
+  showHeader?: boolean;
+  limit?: number;
   pageSize?: number;
   onEdit?: (transaction: Transaction) => void;
+  variant?: "default" | "compact";
 };
 
 function formatDate(iso: string) {
@@ -31,18 +33,20 @@ function formatDate(iso: string) {
 }
 
 export default function TransactionsTable({
-  transactions,
+  showHeader = true,
+  limit,
   pageSize,
   onEdit,
+  variant,
 }: TransactionsTableProps) {
-
   const {
     currentPage,
     totalPages,
     pageItems,
     setPage,
     pageSize: resolvedPageSize,
-  } = useTransactionsTable(transactions, { pageSize });
+    transactions,
+  } = useTransactionsTable({ pageSize });
 
   if (transactions.length === 0) {
     return (
@@ -67,37 +71,43 @@ export default function TransactionsTable({
   }
 
   function _renderTableBody() {
-    return (
-      <TableBody>
-        {pageItems.map((tx) => (
-          <TableRow key={tx.id} className="group">
-            <TableCell>
-              <CategoryBadge category={tx.category} />
-            </TableCell>
-            <TableCell className="font-medium text-foreground">
-              {tx.description}
-            </TableCell>
-            <TableCell className="text-muted-foreground">
-              {formatDate(tx.date)}
-            </TableCell>
-            <TableCell className="text-right font-semibold tabular-nums text-destructive">
-              -{formatCurrency(tx.amount, { maximumFractionDigits: 2 })}
-            </TableCell>
-            <TableCell>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="size-8 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
-                onClick={() => onEdit?.(tx)}
-                aria-label={`Edit ${tx.description}`}
-              >
-                <Pencil className="size-4" aria-hidden="true" />
-              </Button>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    );
+    switch (variant) {
+      case "compact":
+        return null;
+      case "default":
+      default:
+        return (
+          <TableBody>
+            {pageItems.map((tx) => (
+              <TableRow key={tx.id} className="group">
+                <TableCell>
+                  <CategoryBadge category={tx.category} />
+                </TableCell>
+                <TableCell className="font-medium text-foreground">
+                  {tx.description}
+                </TableCell>
+                <TableCell className="text-muted-foreground">
+                  {formatDate(tx.date)}
+                </TableCell>
+                <TableCell className="text-right font-semibold tabular-nums text-destructive">
+                  -{formatCurrency(tx.amount, { maximumFractionDigits: 2 })}
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-8 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+                    onClick={() => onEdit?.(tx)}
+                    aria-label={`Edit ${tx.description}`}
+                  >
+                    <Pencil className="size-4" aria-hidden="true" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        );
+    }
   }
 
   function _renderPagination() {
@@ -147,12 +157,12 @@ export default function TransactionsTable({
     <>
       <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
         <Table>
-          {_renderTableHeader()}
+          {!!showHeader && _renderTableHeader()}
           {_renderTableBody()}
         </Table>
       </div>
       <div className="mt-4 flex items-center justify-between gap-4">
-        {_renderPagination()}
+        {!limit && _renderPagination()}
       </div>
     </>
   );
