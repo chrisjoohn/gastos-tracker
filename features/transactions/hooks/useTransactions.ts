@@ -7,13 +7,13 @@ import type { TransactionFilters } from "@/lib/api/services/transactions";
 
 const DEFAULT_PAGE_SIZE = 8;
 
-export type UseTransactionsTableOptions = {
+export type UseTransactionsOptions = {
   pageSize?: number;
   initialPage?: number;
   filters?: TransactionFilters;
 };
 
-export function useTransactionsTable(options: UseTransactionsTableOptions = {}) {
+export function useTransactions(options: UseTransactionsOptions = {}) {
   const { pageSize = DEFAULT_PAGE_SIZE, initialPage = 1, filters } = options;
 
   const [page, setPage] = React.useState<number>(initialPage);
