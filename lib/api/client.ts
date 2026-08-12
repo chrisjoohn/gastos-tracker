@@ -13,8 +13,7 @@ export class ApiError extends Error {
 const DEFAULT_BASE_URL = "http://localhost:3001/api";
 
 function getApiBaseUrl() {
-  const configuredBaseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL ?? process.env.API_BASE_URL;
+  const configuredBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL ?? process.env.API_BASE_URL;
 
   return (configuredBaseUrl ?? DEFAULT_BASE_URL).replace(/\/$/, "");
 }
@@ -59,7 +58,9 @@ async function parseError(response: Response) {
   }
 
   if (payload && typeof payload === "object" && "error" in payload) {
-    const errorPayload = payload as { error?: { message?: string; code?: string; details?: unknown } };
+    const errorPayload = payload as {
+      error?: { message?: string; code?: string; details?: unknown };
+    };
     return new ApiError(
       errorPayload.error?.message ?? "Request failed",
       response.status,

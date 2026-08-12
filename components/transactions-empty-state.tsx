@@ -12,9 +12,7 @@ export function TransactionsEmptyState({ onAdd }: { onAdd: () => void }) {
         <ReceiptText className="size-8 text-muted-foreground" />
       </div>
       <div className="flex flex-col gap-1">
-        <h2 className="text-lg font-semibold text-foreground">
-          No transactions yet
-        </h2>
+        <h2 className="text-lg font-semibold text-foreground">No transactions yet</h2>
         <p className="max-w-xs text-sm text-muted-foreground text-pretty">
           Start tracking your spending by adding your first transaction.
         </p>

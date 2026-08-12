@@ -39,10 +39,7 @@ export function SummaryCards() {
   const top = categories[topCategory.category];
 
   return (
-    <section
-      aria-label="Monthly summary"
-      className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-    >
+    <section aria-label="Monthly summary" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       <SummaryCard
         label="Total Spent This Month"
         value={formatCurrency(totalSpent)}

@@ -1,9 +1,5 @@
 import { api } from "../client";
-import type {
-  PaginatedResponse,
-  TransactionRecord,
-  TransactionCategory,
-} from "../types";
+import type { PaginatedResponse, TransactionRecord, TransactionCategory } from "../types";
 
 export interface TransactionFilters {
   page?: number;
@@ -44,18 +40,14 @@ function buildQueryString(filters?: TransactionFilters) {
 export async function listTransactions(
   filters?: TransactionFilters,
 ): Promise<PaginatedResponse<TransactionRecord>> {
-  return api.get<PaginatedResponse<TransactionRecord>>(
-    `/transactions${buildQueryString(filters)}`,
-  );
+  return api.get<PaginatedResponse<TransactionRecord>>(`/transactions${buildQueryString(filters)}`);
 }
 
 export async function getTransaction(id: string): Promise<TransactionRecord> {
   return api.get<TransactionRecord>(`/transactions/${id}`);
 }
 
-export async function createTransaction(
-  input: CreateTransactionInput,
-): Promise<TransactionRecord> {
+export async function createTransaction(input: CreateTransactionInput): Promise<TransactionRecord> {
   return api.post<TransactionRecord>("/transactions", input);
 }
 

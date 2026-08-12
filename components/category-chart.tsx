@@ -1,24 +1,14 @@
 "use client";
 
 import { Pie, PieChart, Cell, Label } from "recharts";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-import {
-  categories,
-  formatCurrency,
-  spendingByCategory,
-} from "@/lib/finance-data";
+import { categories, formatCurrency, spendingByCategory } from "@/lib/finance-data";
 
 const chartData = spendingByCategory.map((item) => ({
   key: item.category,
@@ -46,10 +36,7 @@ export function CategoryChart() {
       </CardHeader>
       <CardContent>
         <div className="flex flex-col items-center gap-6 lg:flex-row lg:items-center">
-          <ChartContainer
-            config={chartConfig}
-            className="mx-auto aspect-square h-[220px]"
-          >
+          <ChartContainer config={chartConfig} className="mx-auto aspect-square h-[220px]">
             <PieChart>
               <ChartTooltip
                 cursor={false}
@@ -58,8 +45,7 @@ export function CategoryChart() {
                     hideLabel
                     formatter={(value, name) => [
                       `${formatCurrency(Number(value))}  `,
-                      categories[name as keyof typeof categories]?.label ??
-                        name,
+                      categories[name as keyof typeof categories]?.label ?? name,
                     ]}
                   />
                 }
@@ -117,9 +103,7 @@ export function CategoryChart() {
                   style={{ backgroundColor: entry.fill }}
                   aria-hidden="true"
                 />
-                <span className="min-w-0 flex-1 truncate text-muted-foreground">
-                  {entry.label}
-                </span>
+                <span className="min-w-0 flex-1 truncate text-muted-foreground">{entry.label}</span>
                 <span className="shrink-0 font-medium tabular-nums text-foreground">
                   {formatCurrency(entry.amount)}
                 </span>

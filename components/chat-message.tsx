@@ -6,12 +6,7 @@ export function ChatMessage({ message }: { message: ChatMessageType }) {
   const isUser = message.role === "user";
 
   return (
-    <div
-      className={cn(
-        "flex w-full items-end gap-2.5",
-        isUser ? "justify-end" : "justify-start",
-      )}
-    >
+    <div className={cn("flex w-full items-end gap-2.5", isUser ? "justify-end" : "justify-start")}>
       {!isUser && (
         <span
           className="flex size-7 shrink-0 items-center justify-center rounded-full text-primary-foreground"

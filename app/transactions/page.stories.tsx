@@ -7,28 +7,25 @@ import TransactionsPage from "./page";
 
 const transactionsUrl = "http://localhost:3001/api/transactions";
 
-const transactionsHandler = http.get(
-  transactionsUrl,
-  async ({ request }) => {
-    await delay(500);
+const transactionsHandler = http.get(transactionsUrl, async ({ request }) => {
+  await delay(500);
 
-    const url = new URL(request.url);
-    const page = Number(url.searchParams.get("page") ?? "1");
-    const pageSize = Number(url.searchParams.get("pageSize") ?? "8");
-    const start = (page - 1) * pageSize;
-    const end = start + pageSize;
+  const url = new URL(request.url);
+  const page = Number(url.searchParams.get("page") ?? "1");
+  const pageSize = Number(url.searchParams.get("pageSize") ?? "8");
+  const start = (page - 1) * pageSize;
+  const end = start + pageSize;
 
-    return HttpResponse.json({
-      data: mockTransactions.slice(start, end),
-      meta: {
-        page,
-        pageSize,
-        total: mockTransactions.length,
-        totalPages: Math.ceil(mockTransactions.length / pageSize),
-      },
-    });
-  },
-);
+  return HttpResponse.json({
+    data: mockTransactions.slice(start, end),
+    meta: {
+      page,
+      pageSize,
+      total: mockTransactions.length,
+      totalPages: Math.ceil(mockTransactions.length / pageSize),
+    },
+  });
+});
 
 const emptyTransactionsHandler = http.get(transactionsUrl, async () => {
   await delay(300);

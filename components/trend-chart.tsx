@@ -1,13 +1,7 @@
 "use client";
 
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartContainer,
   ChartTooltip,
@@ -45,16 +39,8 @@ export function TrendChart() {
           <AreaChart data={chartData} margin={{ left: 4, right: 12, top: 8 }}>
             <defs>
               <linearGradient id="fillAmount" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-amount)"
-                  stopOpacity={0.3}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-amount)"
-                  stopOpacity={0.02}
-                />
+                <stop offset="5%" stopColor="var(--color-amount)" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="var(--color-amount)" stopOpacity={0.02} />
               </linearGradient>
             </defs>
             <CartesianGrid vertical={false} strokeDasharray="3 3" />
@@ -78,10 +64,7 @@ export function TrendChart() {
               content={
                 <ChartTooltipContent
                   labelFormatter={(value) => formatDay(String(value))}
-                  formatter={(value) => [
-                    formatCurrency(Number(value)),
-                    " Spent",
-                  ]}
+                  formatter={(value) => [formatCurrency(Number(value)), " Spent"]}
                 />
               }
             />

@@ -108,22 +108,17 @@ export const spendingByCategory: { category: CategoryKey; amount: number }[] = [
   { category: "health", amount: 138 },
 ];
 
-export const totalSpent = spendingByCategory.reduce(
-  (sum, c) => sum + c.amount,
-  0,
-);
+export const totalSpent = spendingByCategory.reduce((sum, c) => sum + c.amount, 0);
 
-export const topCategory = [...spendingByCategory].sort(
-  (a, b) => b.amount - a.amount,
-)[0];
+export const topCategory = [...spendingByCategory].sort((a, b) => b.amount - a.amount)[0];
 
 // Daily spending over the last 30 days
 function buildDailySpending() {
   const days: { date: string; amount: number }[] = [];
   const today = new Date();
   const seed = [
-    62, 40, 18, 95, 120, 34, 0, 58, 210, 44, 27, 80, 66, 12, 150, 39, 0, 74,
-    132, 48, 22, 96, 58, 0, 180, 41, 63, 29, 110, 52,
+    62, 40, 18, 95, 120, 34, 0, 58, 210, 44, 27, 80, 66, 12, 150, 39, 0, 74, 132, 48, 22, 96, 58, 0,
+    180, 41, 63, 29, 110, 52,
   ];
   for (let i = 29; i >= 0; i--) {
     const d = new Date(today);
