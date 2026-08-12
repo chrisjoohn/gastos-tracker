@@ -5,7 +5,6 @@ import type { DateRange } from "react-day-picker";
 import { CalendarIcon, Plus, X } from "lucide-react";
 
 import {
-  allTransactions,
   categories,
   categoryOptions,
   type CategoryKey,
@@ -13,11 +12,7 @@ import {
 } from "@/lib/finance-data";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -25,12 +20,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import TransactionsTable from "@/components/transactions-table";
-import {
-  TransactionDialog,
-  type TransactionDraft,
-} from "@/components/transaction-dialog";
-import { TransactionsEmptyState } from "@/components/transactions-empty-state";
+import { TransactionDialog, type TransactionDraft } from "@/components/transaction-dialog";
+import type { TransactionFilters } from "@/lib/api/services/transactions";
+
+import { TransactionsTable, useTransactions } from "@/features/transactions";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
@@ -41,34 +34,26 @@ function formatDate(iso: string) {
 }
 
 export default function TransactionsPage() {
-  const [transactions, setTransactions] =
-    React.useState<Transaction[]>(allTransactions);
-  const [categoryFilter, setCategoryFilter] = React.useState<
-    CategoryKey | "all"
-  >("all");
+  const [categoryFilter, setCategoryFilter] = React.useState<CategoryKey | "all">("all");
   const [dateRange, setDateRange] = React.useState<DateRange | undefined>();
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [editing, setEditing] = React.useState<Transaction | null>(null);
-
-  const filtered = React.useMemo(() => {
-    return transactions
-      .filter((tx) =>
-        categoryFilter === "all" ? true : tx.category === categoryFilter,
-      )
-      .filter((tx) => {
-        if (!dateRange?.from) return true;
-        const d = new Date(tx.date);
-        const from = new Date(dateRange.from);
-        from.setHours(0, 0, 0, 0);
-        const to = dateRange.to ? new Date(dateRange.to) : from;
-        to.setHours(23, 59, 59, 999);
-        return d >= from && d <= to;
-      })
-      .sort((a, b) => (a.date < b.date ? 1 : -1));
-  }, [transactions, categoryFilter, dateRange]);
+  const [transactions, setTransactions] = React.useState<Transaction[]>([]);
 
   const hasActiveFilters = categoryFilter !== "all" || dateRange?.from;
+
+  const tableFilters = React.useMemo<TransactionFilters>(
+    () => ({
+      category: categoryFilter === "all" ? "all" : categoryFilter,
+      dateFrom: dateRange?.from?.toISOString(),
+      dateTo: dateRange?.to?.toISOString(),
+    }),
+    [categoryFilter, dateRange],
+  );
+  const table = useTransactions({
+    filters: tableFilters,
+  });
 
   function openAdd() {
     setEditing(null);
@@ -117,9 +102,7 @@ export default function TransactionsPage() {
 
   const dateLabel = dateRange?.from
     ? dateRange.to
-      ? `${formatDate(dateRange.from.toISOString())} – ${formatDate(
-          dateRange.to.toISOString(),
-        )}`
+      ? `${formatDate(dateRange.from.toISOString())} – ${formatDate(dateRange.to.toISOString())}`
       : formatDate(dateRange.from.toISOString())
     : "Date range";
 
@@ -141,16 +124,12 @@ export default function TransactionsPage() {
           <div className="flex flex-wrap items-center gap-3">
             <Select
               value={categoryFilter}
-              onValueChange={(value) =>
-                setCategoryFilter(value as CategoryKey | "all")
-              }
+              onValueChange={(value) => setCategoryFilter(value as CategoryKey | "all")}
             >
               <SelectTrigger className="w-[180px]">
                 <SelectValue>
                   {(value: CategoryKey | "all") =>
-                    value && value !== "all"
-                      ? categories[value].label
-                      : "All categories"
+                    value && value !== "all" ? categories[value].label : "All categories"
                   }
                 </SelectValue>
               </SelectTrigger>
@@ -171,19 +150,10 @@ export default function TransactionsPage() {
 
             <Popover>
               <PopoverTrigger
-                render={
-                  <Button
-                    variant="outline"
-                    className="justify-start gap-2 font-normal"
-                  />
-                }
+                render={<Button variant="outline" className="justify-start gap-2 font-normal" />}
               >
                 <CalendarIcon className="size-4" aria-hidden="true" />
-                <span
-                  className={dateRange?.from ? "" : "text-muted-foreground"}
-                >
-                  {dateLabel}
-                </span>
+                <span className={dateRange?.from ? "" : "text-muted-foreground"}>{dateLabel}</span>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
@@ -208,12 +178,7 @@ export default function TransactionsPage() {
             ) : null}
           </div>
         </header>
-
-        {filtered.length === 0 ? (
-          <TransactionsEmptyState onAdd={openAdd} />
-        ) : (
-          <TransactionsTable pageSize={8} onEdit={openEdit} />
-        )}
+        <TransactionsTable table={table} onEdit={openEdit} />
       </div>
 
       <TransactionDialog
