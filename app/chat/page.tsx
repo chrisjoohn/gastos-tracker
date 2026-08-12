@@ -14,9 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export default function ChatPage() {
-  const [messages, setMessages] = useState<ChatMessageType[]>([
-    assistantGreeting,
-  ]);
+  const [messages, setMessages] = useState<ChatMessageType[]>([assistantGreeting]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
 
@@ -82,9 +80,7 @@ export default function ChatPage() {
             <h1 className="text-base font-semibold tracking-tight text-foreground">
               Budgeting Assistant
             </h1>
-            <p className="text-xs text-muted-foreground">
-              Ask about your spending and savings
-            </p>
+            <p className="text-xs text-muted-foreground">Ask about your spending and savings</p>
           </div>
         </div>
       </header>

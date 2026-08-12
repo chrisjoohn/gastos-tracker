@@ -1,15 +1,5 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  categories,
-  formatCurrency,
-  recentTransactions,
-} from "@/lib/finance-data";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { categories, formatCurrency, recentTransactions } from "@/lib/finance-data";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
@@ -49,9 +39,7 @@ export function RecentTransactions() {
                 </span>
 
                 <div className="flex min-w-0 flex-1 flex-col">
-                  <span className="truncate font-medium text-foreground">
-                    {tx.description}
-                  </span>
+                  <span className="truncate font-medium text-foreground">{tx.description}</span>
                   <span className="text-sm text-muted-foreground">
                     {category.label} &middot; {formatDate(tx.date)}
                   </span>

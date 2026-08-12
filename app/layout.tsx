@@ -4,8 +4,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Finance Dashboard",
-  description:
-    "Track your monthly spending, categories, and recent transactions.",
+  description: "Track your monthly spending, categories, and recent transactions.",
   generator: "v0.app",
   icons: {
     icon: [

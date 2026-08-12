@@ -8,13 +8,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 type Mode = "login" | "signup";
 
@@ -47,12 +41,8 @@ export default function LoginPage() {
             <Wallet className="size-6" aria-hidden="true" />
           </div>
           <div className="flex flex-col gap-1">
-            <h1 className="text-xl font-semibold tracking-tight text-foreground">
-              Ledger
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              Your personal finance companion
-            </p>
+            <h1 className="text-xl font-semibold tracking-tight text-foreground">Ledger</h1>
+            <p className="text-sm text-muted-foreground">Your personal finance companion</p>
           </div>
         </div>
 
@@ -150,9 +140,7 @@ export default function LoginPage() {
                 className="mt-2 w-full bg-[var(--chart-1)] text-white hover:bg-[var(--chart-3)]"
                 disabled={submitting}
               >
-                {submitting && (
-                  <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-                )}
+                {submitting && <Loader2 className="size-4 animate-spin" aria-hidden="true" />}
                 {isLogin ? "Log In" : "Create Account"}
               </Button>
             </form>

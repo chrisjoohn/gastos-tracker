@@ -63,9 +63,7 @@ export function TransactionDialog({
   transaction: Transaction | null;
   onSave: (draft: TransactionDraft, id: string | null) => void;
 }) {
-  const [draft, setDraft] = React.useState<TransactionDraft>(() =>
-    toDraft(transaction),
-  );
+  const [draft, setDraft] = React.useState<TransactionDraft>(() => toDraft(transaction));
 
   // Re-seed the form whenever the dialog opens for a different transaction.
   React.useEffect(() => {
@@ -74,8 +72,7 @@ export function TransactionDialog({
 
   const isEditing = transaction !== null;
   const amountNum = Number.parseFloat(draft.amount);
-  const isValid =
-    Number.isFinite(amountNum) && amountNum > 0 && draft.note.trim().length > 0;
+  const isValid = Number.isFinite(amountNum) && amountNum > 0 && draft.note.trim().length > 0;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -89,9 +86,7 @@ export function TransactionDialog({
       <DialogContent className="sm:max-w-md">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>
-              {isEditing ? "Edit transaction" : "Add transaction"}
-            </DialogTitle>
+            <DialogTitle>{isEditing ? "Edit transaction" : "Add transaction"}</DialogTitle>
             <DialogDescription>
               {isEditing
                 ? "Update the details of this transaction."
@@ -115,9 +110,7 @@ export function TransactionDialog({
                   placeholder="0.00"
                   className="pl-7"
                   value={draft.amount}
-                  onChange={(e) =>
-                    setDraft((d) => ({ ...d, amount: e.target.value }))
-                  }
+                  onChange={(e) => setDraft((d) => ({ ...d, amount: e.target.value }))}
                 />
               </div>
             </div>
@@ -158,9 +151,7 @@ export function TransactionDialog({
                 id="date"
                 type="date"
                 value={draft.date}
-                onChange={(e) =>
-                  setDraft((d) => ({ ...d, date: e.target.value }))
-                }
+                onChange={(e) => setDraft((d) => ({ ...d, date: e.target.value }))}
               />
             </div>
 
@@ -170,19 +161,13 @@ export function TransactionDialog({
                 id="note"
                 placeholder="e.g. Grocery shopping"
                 value={draft.note}
-                onChange={(e) =>
-                  setDraft((d) => ({ ...d, note: e.target.value }))
-                }
+                onChange={(e) => setDraft((d) => ({ ...d, note: e.target.value }))}
               />
             </div>
           </div>
 
           <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-            >
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
             <Button type="submit" disabled={!isValid}>
