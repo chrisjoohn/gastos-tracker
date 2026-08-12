@@ -24,7 +24,7 @@ export function useTransactions(options: UseTransactionsOptions = {}) {
 
   React.useEffect(() => {
     setPage(1);
-  }, [pageSize]);
+  }, [pageSize, filters?.category, filters?.dateFrom, filters?.dateTo]);
 
   const effectivePage = Math.max(1, Math.min(page, totalPages || 1));
 
@@ -70,7 +70,6 @@ export function useTransactions(options: UseTransactionsOptions = {}) {
   }, [effectivePage, filters?.category, filters?.dateFrom, filters?.dateTo, pageSize]);
 
   const currentPage = Math.min(page, totalPages);
-  const pageItems = React.useMemo(() => transactions, [transactions]);
   const reset = React.useCallback(() => setPage(1), []);
 
   return {
@@ -78,7 +77,6 @@ export function useTransactions(options: UseTransactionsOptions = {}) {
     currentPage,
     totalPages,
     totalCount,
-    pageItems,
     pageSize,
     reset,
     transactions,
