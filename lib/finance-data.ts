@@ -179,7 +179,7 @@ export const recentTransactions: Transaction[] = [
 ];
 
 // Full transaction ledger used by the Transactions page.
-export const allTransactions: Transaction[] = [
+export const mockTransactions: Transaction[] = [
   {
     id: "t1",
     description: "Whole Foods Market",
