@@ -1,27 +1,17 @@
-"use client";
-
-import * as React from "react";
 import { ChevronLeft, ChevronRight, Pencil } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { CategoryBadge } from "@/components/category-badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatCurrency, type Transaction } from "@/lib/finance-data";
 import { useTransactionsTable } from "./useTransactionsTable";
 
+import type { TransactionFilters } from "@/lib/api/services/transactions";
+
 export type TransactionsTableProps = {
-  showHeader?: boolean;
-  limit?: number;
   pageSize?: number;
   onEdit?: (transaction: Transaction) => void;
-  variant?: "default" | "compact";
+  filters?: TransactionFilters;
 };
 
 function formatDate(iso: string) {
@@ -32,21 +22,25 @@ function formatDate(iso: string) {
   });
 }
 
-export default function TransactionsTable({
-  showHeader = true,
-  limit,
-  pageSize,
-  onEdit,
-  variant,
-}: TransactionsTableProps) {
+export default function TransactionsTable({ pageSize, onEdit, filters }: TransactionsTableProps) {
   const {
     currentPage,
     totalPages,
+    totalCount,
     pageItems,
     setPage,
     pageSize: resolvedPageSize,
     transactions,
-  } = useTransactionsTable({ pageSize });
+    error,
+  } = useTransactionsTable({ pageSize, filters });
+
+  if (error) {
+    return (
+      <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm p-8 text-center text-sm text-destructive">
+        {error}
+      </div>
+    );
+  }
 
   if (transactions.length === 0) {
     return (
@@ -71,43 +65,33 @@ export default function TransactionsTable({
   }
 
   function _renderTableBody() {
-    switch (variant) {
-      case "compact":
-        return null;
-      case "default":
-      default:
-        return (
-          <TableBody>
-            {pageItems.map((tx) => (
-              <TableRow key={tx.id} className="group">
-                <TableCell>
-                  <CategoryBadge category={tx.category} />
-                </TableCell>
-                <TableCell className="font-medium text-foreground">
-                  {tx.description}
-                </TableCell>
-                <TableCell className="text-muted-foreground">
-                  {formatDate(tx.date)}
-                </TableCell>
-                <TableCell className="text-right font-semibold tabular-nums text-destructive">
-                  -{formatCurrency(tx.amount, { maximumFractionDigits: 2 })}
-                </TableCell>
-                <TableCell>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="size-8 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
-                    onClick={() => onEdit?.(tx)}
-                    aria-label={`Edit ${tx.description}`}
-                  >
-                    <Pencil className="size-4" aria-hidden="true" />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        );
-    }
+    return (
+      <TableBody>
+        {pageItems.map((tx) => (
+          <TableRow key={tx.id} className="group">
+            <TableCell>
+              <CategoryBadge category={tx.category} />
+            </TableCell>
+            <TableCell className="font-medium text-foreground">{tx.description}</TableCell>
+            <TableCell className="text-muted-foreground">{formatDate(tx.date)}</TableCell>
+            <TableCell className="text-right font-semibold tabular-nums text-destructive">
+              -{formatCurrency(tx.amount, { maximumFractionDigits: 2 })}
+            </TableCell>
+            <TableCell>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="size-8 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+                onClick={() => onEdit?.(tx)}
+                aria-label={`Edit ${tx.description}`}
+              >
+                <Pencil className="size-4" aria-hidden="true" />
+              </Button>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    );
   }
 
   function _renderPagination() {
@@ -116,13 +100,9 @@ export default function TransactionsTable({
         <p className="text-sm text-muted-foreground">
           Showing{" "}
           <span className="font-medium text-foreground">
-            {(currentPage - 1) * resolvedPageSize + 1}–
-            {Math.min(currentPage * resolvedPageSize, transactions.length)}
+            {(currentPage - 1) * resolvedPageSize + 1}–{Math.min(currentPage * resolvedPageSize, totalCount)}
           </span>{" "}
-          of{" "}
-          <span className="font-medium text-foreground">
-            {transactions.length}
-          </span>
+          of <span className="font-medium text-foreground">{totalCount}</span>
         </p>
         <div className="flex items-center gap-2">
           <Button
@@ -157,13 +137,11 @@ export default function TransactionsTable({
     <>
       <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
         <Table>
-          {!!showHeader && _renderTableHeader()}
+          {_renderTableHeader()}
           {_renderTableBody()}
         </Table>
       </div>
-      <div className="mt-4 flex items-center justify-between gap-4">
-        {!limit && _renderPagination()}
-      </div>
+      <div className="mt-4 flex items-center justify-between gap-4">{_renderPagination()}</div>
     </>
   );
 }
