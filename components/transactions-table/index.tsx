@@ -3,7 +3,10 @@ import { ChevronLeft, ChevronRight, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CategoryBadge } from "@/components/category-badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { TransactionsEmptyState } from "@/components/transactions-empty-state";
+
 import { formatCurrency, type Transaction } from "@/lib/finance-data";
+
 import { useTransactionsTable } from "./useTransactionsTable";
 
 import type { TransactionFilters } from "@/lib/api/services/transactions";
@@ -43,11 +46,8 @@ export default function TransactionsTable({ pageSize, onEdit, filters }: Transac
   }
 
   if (transactions.length === 0) {
-    return (
-      <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm p-8 text-center text-sm text-muted-foreground">
-        No transactions available.
-      </div>
-    );
+    // TODO: We should probably show a different empty state if there are active filters applied, e.g. "No transactions found for the selected filters."
+    return <TransactionsEmptyState onAdd={() => {}} />;
   }
 
   function _renderTableHeader() {
