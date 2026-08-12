@@ -6,6 +6,7 @@ node_modules/
 .next/
 out/
 *.log
+*.tsbuildinfo
 
 # Environment variables
 .env
@@ -15,6 +16,7 @@ out/
 # Build outputs
 dist/
 build/
+storybook-static/
 
 # IDE
 .vscode/
@@ -34,6 +36,5 @@ coverage/
 # Misc
 .vercel/
 .turbo/
-
-*storybook.log
-storybook-static
+*.storybook.log
+debug-storybook.log
