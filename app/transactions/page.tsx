@@ -12,6 +12,7 @@ import {
 } from "@/lib/finance-data";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Select,
@@ -20,10 +21,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { TransactionDialog, type TransactionDraft } from "@/components/transaction-dialog";
 import type { TransactionFilters } from "@/lib/api/services/transactions";
 
-import { TransactionsTable, useTransactions } from "@/features/transactions";
+import {
+  TransactionForm,
+  TransactionsTable,
+  type TransactionDraft,
+  useTransactions,
+} from "@/features/transactions";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
@@ -39,7 +44,6 @@ export default function TransactionsPage() {
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [editing, setEditing] = React.useState<Transaction | null>(null);
-  const [transactions, setTransactions] = React.useState<Transaction[]>([]);
 
   const hasActiveFilters = categoryFilter !== "all" || dateRange?.from;
 
@@ -67,32 +71,27 @@ export default function TransactionsPage() {
 
   function handleSave(draft: TransactionDraft, id: string | null) {
     const amount = Number.parseFloat(draft.amount);
-    if (id) {
-      setTransactions((prev) =>
-        prev.map((tx) =>
-          tx.id === id
-            ? {
-                ...tx,
-                amount,
-                category: draft.category,
-                date: draft.date,
-                description: draft.note.trim(),
-              }
-            : tx,
-        ),
-      );
-    } else {
-      setTransactions((prev) => [
-        {
-          id: `t${Date.now()}`,
-          amount,
-          category: draft.category,
-          date: draft.date,
-          description: draft.note.trim(),
-        },
-        ...prev,
-      ]);
+
+    if (!Number.isFinite(amount) || amount <= 0) {
+      return;
     }
+
+    const nextTransaction = {
+      id: id ?? `t${Date.now()}`,
+      amount,
+      category: draft.category,
+      date: draft.date,
+      description: draft.note.trim(),
+    };
+
+    if (id) {
+      // Replace with your API mutation or state-update integration here.
+      console.info("Update transaction", nextTransaction);
+      return;
+    }
+
+    // Replace with your API mutation or state-update integration here.
+    console.info("Create transaction", nextTransaction);
   }
 
   function clearFilters() {
@@ -181,12 +180,27 @@ export default function TransactionsPage() {
         <TransactionsTable table={table} onEdit={openEdit} />
       </div>
 
-      <TransactionDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        transaction={editing}
-        onSave={handleSave}
-      />
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{editing ? "Edit transaction" : "Add transaction"}</DialogTitle>
+            <DialogDescription>
+              {editing
+                ? "Update the details of this transaction."
+                : "Record a new expense in your ledger."}
+            </DialogDescription>
+          </DialogHeader>
+
+          <TransactionForm
+            transaction={editing}
+            onSubmit={(draft, id) => {
+              handleSave(draft, id);
+              setDialogOpen(false);
+            }}
+            onCancel={() => setDialogOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }
