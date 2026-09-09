@@ -84,7 +84,7 @@ export function useTransactions(options: UseTransactionsOptions = {}): UseTransa
 }
 
 export type UseTransactionsReturn = {
-  setPage: (n: number) => void;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
   next: () => void;
   prev: () => void;
   goTo: (n: number) => void;
