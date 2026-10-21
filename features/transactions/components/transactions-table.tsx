@@ -51,7 +51,15 @@ export default function TransactionsTable({ table, onEdit }: TransactionsTablePr
 
   if (transactions.length === 0) {
     // TODO: We should probably show a different empty state if there are active filters applied, e.g. "No transactions found for the selected filters."
-    return <TransactionsEmptyState onAdd={() => {}} />;
+    return (
+      <TransactionsEmptyState
+        onAdd={() =>
+          window.dispatchEvent(
+            new CustomEvent("open-transaction-dialog", { detail: null }),
+          )
+        }
+      />
+    );
   }
 
   function _renderTableHeader() {

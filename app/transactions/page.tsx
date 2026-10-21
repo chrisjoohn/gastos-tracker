@@ -69,6 +69,40 @@ export default function TransactionsPage() {
     setDialogOpen(true);
   }
 
+  React.useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "n") {
+        setEditing(null);
+        setDialogOpen(true);
+      }
+
+      if (e.key === "Escape") {
+        setDialogOpen(false);
+      }
+    }
+
+    function onOpen(e: Event) {
+      const custom = e as CustomEvent<Transaction | null>;
+      const tx = (custom && custom.detail) || null;
+      setEditing(tx);
+      setDialogOpen(true);
+    }
+
+    function onClose() {
+      setDialogOpen(false);
+    }
+
+    window.addEventListener("keydown", onKey);
+    window.addEventListener("open-transaction-dialog", onOpen as EventListener);
+    window.addEventListener("close-transaction-dialog", onClose as EventListener);
+
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("open-transaction-dialog", onOpen as EventListener);
+      window.removeEventListener("close-transaction-dialog", onClose as EventListener);
+    };
+  }, []);
+
   function handleSave(draft: TransactionDraft, id: string | null) {
     const amount = Number.parseFloat(draft.amount);
 
