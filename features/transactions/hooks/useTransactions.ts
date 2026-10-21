@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { listTransactions } from "@/lib/api/services/transactions";
+import { useListTransactionsQuery } from "@/lib/api/services/transactions";
 
 import type { TransactionRecord } from "@/lib/api/types";
 import type { TransactionFilters } from "@/lib/api/services/transactions";
@@ -13,11 +13,10 @@ export type UseTransactionsOptions = {
   filters?: TransactionFilters;
 };
 
-export function useTransactions(options: UseTransactionsOptions = {}) {
+export function useTransactions(options: UseTransactionsOptions = {}): UseTransactionsReturn {
   const { pageSize = DEFAULT_PAGE_SIZE, initialPage = 1, filters } = options;
 
   const [page, setPage] = React.useState<number>(initialPage);
-  const [transactions, setTransactions] = React.useState<TransactionRecord[]>([]);
   const [totalPages, setTotalPages] = React.useState(1);
   const [totalCount, setTotalCount] = React.useState(0);
   const [error, setError] = React.useState<string | null>(null);
@@ -26,60 +25,75 @@ export function useTransactions(options: UseTransactionsOptions = {}) {
     setPage(1);
   }, [pageSize, filters?.category, filters?.dateFrom, filters?.dateTo]);
 
-  const effectivePage = Math.max(1, Math.min(page, totalPages || 1));
+  const effectivePage = Math.max(1, Math.min(page, Math.max(1, totalPages)));
+  const { data, error: rtkError, isFetching } = useListTransactionsQuery(
+    {
+      page: effectivePage,
+      pageSize,
+      category: filters?.category,
+      dateFrom: filters?.dateFrom,
+      dateTo: filters?.dateTo,
+    },
+    { refetchOnMountOrArgChange: true },
+  );
 
   React.useEffect(() => {
-    let isMounted = true;
+    setError(null);
+    setTotalPages(data?.meta?.totalPages ?? 1);
+    setTotalCount(data?.meta?.total ?? 0);
 
-    const _fetchTransactions = async () => {
-      setError(null);
+    if (rtkError) {
+      // Map RTK Query error to a simple message
+      const errAny = rtkError as any;
+      const message = errAny?.data?.error?.message ?? errAny?.error ?? (rtkError as Error)?.message ?? "Unable to load transactions.";
+      setError(String(message));
+    }
+  }, [data, rtkError]);
 
-      try {
-        const response = await listTransactions({
-          page: effectivePage,
-          pageSize,
-          category: filters?.category,
-          dateFrom: filters?.dateFrom,
-          dateTo: filters?.dateTo,
-        });
+  // Ensure `page` is clamped when `totalPages` changes (e.g. after filtering)
+  React.useEffect(() => {
+    setPage((prev) => {
+      const max = Math.max(1, totalPages);
+      if (prev < 1) return 1;
+      if (prev > max) return max;
+      return prev;
+    });
+  }, [totalPages]);
 
-        if (!isMounted) {
-          return;
-        }
+  const currentPage = effectivePage;
 
-        setTransactions(response.data);
-        setTotalPages(response.meta.totalPages || 1);
-        setTotalCount(response.meta.total);
-      } catch (err) {
-        if (!isMounted) {
-          return;
-        }
-
-        setTransactions([]);
-        setTotalPages(1);
-        setTotalCount(0);
-        setError(err instanceof Error ? err.message : "Unable to load transactions.");
-      }
-    };
-
-    void _fetchTransactions();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [effectivePage, filters?.category, filters?.dateFrom, filters?.dateTo, pageSize]);
-
-  const currentPage = Math.min(page, totalPages);
-  const reset = React.useCallback(() => setPage(1), []);
+  const reset = React.useCallback(() => setPage(1), [setPage]);
+  const goTo = React.useCallback((n: number) => setPage((_) => Math.max(1, Math.floor(n))), []);
+  const next = React.useCallback(() => setPage((p) => Math.min(Math.max(1, totalPages), p + 1)), [totalPages]);
+  const prev = React.useCallback(() => setPage((p) => Math.max(1, p - 1)), []);
 
   return {
     setPage,
+    next,
+    prev,
+    goTo,
     currentPage,
     totalPages,
     totalCount,
     pageSize,
     reset,
-    transactions,
+    transactions: data?.data ?? [],
     error,
+    isFetching,
   } as const;
 }
+
+export type UseTransactionsReturn = {
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  next: () => void;
+  prev: () => void;
+  goTo: (n: number) => void;
+  currentPage: number;
+  totalPages: number;
+  totalCount: number;
+  pageSize: number;
+  reset: () => void;
+  transactions: TransactionRecord[];
+  error: string | null;
+  isFetching: boolean;
+};

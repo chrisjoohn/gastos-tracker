@@ -7,7 +7,7 @@ import TransactionsPage from "./page";
 
 const transactionsUrl = "http://localhost:3001/api/transactions";
 
-const transactionsHandler = http.get(transactionsUrl, async ({ request }) => {
+const getTransactionsHandler = http.get(transactionsUrl, async ({ request }) => {
   await delay(500);
 
   const url = new URL(request.url);
@@ -41,12 +41,60 @@ const emptyTransactionsHandler = http.get(transactionsUrl, async () => {
   });
 });
 
+const createTransactionHandler = http.post(transactionsUrl, async ({ request }) => {
+  await delay(200);
+  const body = (await request.json()) as Record<string, unknown>;
+  const id = String(Date.now());
+
+  const newTransaction = { id, ...body } as any;
+  // prepend to mock data so it appears on page 1
+  mockTransactions.unshift(newTransaction);
+
+  return HttpResponse.json(newTransaction);
+});
+
+const updateTransactionHandler = http.patch(`${transactionsUrl}/:id`, async ({ request }) => {
+  await delay(200);
+  const url = new URL(request.url);
+  const parts = url.pathname.split("/");
+  const id = parts[parts.length - 1];
+  const body = (await request.json()) as Record<string, unknown>;
+
+  const idx = mockTransactions.findIndex((t) => String(t.id) === String(id));
+  if (idx >= 0) {
+    mockTransactions[idx] = { ...mockTransactions[idx], ...body };
+    return HttpResponse.json(mockTransactions[idx]);
+  }
+
+  return HttpResponse.json({ message: "Not found" }, { status: 404 });
+});
+
+const deleteTransactionHandler = http.delete(`${transactionsUrl}/:id`, async ({ request }) => {
+  await delay(150);
+  const url = new URL(request.url);
+  const parts = url.pathname.split("/");
+  const id = parts[parts.length - 1];
+
+  const idx = mockTransactions.findIndex((t) => String(t.id) === String(id));
+  if (idx >= 0) {
+    mockTransactions.splice(idx, 1);
+    return HttpResponse.json({ success: true });
+  }
+
+  return HttpResponse.json({ message: "Not found" }, { status: 404 });
+});
+
 const meta = {
   title: "Pages/Transactions",
   component: TransactionsPage,
   parameters: {
     msw: {
-      handlers: [transactionsHandler],
+      handlers: [
+        getTransactionsHandler,
+        createTransactionHandler,
+        updateTransactionHandler,
+        deleteTransactionHandler,
+      ],
     },
   },
 } satisfies Meta<typeof TransactionsPage>;
